@@ -4,8 +4,9 @@
  */
 import axios from "axios";
 import { auth } from "@config/firebase";
+import { getEnvVar } from "@utils/envConfig";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = getEnvVar("VITE_API_BASE_URL");
 
 const apiService = axios.create({
   baseURL: API_BASE_URL,
@@ -44,15 +45,16 @@ apiService.interceptors.response.use(
       console.error("Network error - backend server may be down");
       throw new Error("Backend server is not available. Please try again later.");
     }
-    
+
     if (error.response?.status === 401) {
       console.warn("Authentication error detected");
-      
+
       // Don't sign out during registration processes
-      const isRegistrationRequest = error.config?.url?.includes('/register') || 
-                                   error.config?.url?.includes('/registerProvider') ||
-                                   error.config?.url?.includes('/registerConsumer');
-      
+      const isRegistrationRequest =
+        error.config?.url?.includes("/register") ||
+        error.config?.url?.includes("/registerProvider") ||
+        error.config?.url?.includes("/registerConsumer");
+
       if (!isRegistrationRequest) {
         console.log("Signing out due to auth error");
         await auth.signOut();

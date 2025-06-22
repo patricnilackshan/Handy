@@ -19,9 +19,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import apiService from "@utils/apiService";
 import { setUser } from "@store/userSlice";
+import { getEnvVar } from "@utils/envConfig";
 
 // Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(getEnvVar("VITE_STRIPE_PUBLISHABLE_KEY"));
 
 interface PaymentFormProps {
   tokens: number;

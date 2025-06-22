@@ -8,16 +8,17 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 import { getFirestore } from "firebase/firestore";
+import { getEnvVar } from "@utils/envConfig";
 
 // Firebase configuration using environment variables
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  apiKey: getEnvVar("VITE_FIREBASE_API_KEY"),
+  appId: getEnvVar("VITE_FIREBASE_APP_ID"),
+  authDomain: getEnvVar("VITE_FIREBASE_AUTH_DOMAIN"),
+  messagingSenderId: getEnvVar("VITE_FIREBASE_MESSAGING_SENDER_ID"),
+  projectId: getEnvVar("VITE_FIREBASE_PROJECT_ID"),
+  storageBucket: getEnvVar("VITE_FIREBASE_STORAGE_BUCKET"),
+  databaseURL: getEnvVar("VITE_FIREBASE_DATABASE_URL"),
 };
 
 // Initialize Firebase app

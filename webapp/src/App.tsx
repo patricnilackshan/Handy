@@ -11,13 +11,21 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { fetchServiceRequestsBasedOnService } from "@store/serviceRequestsSlice";
 import { ThemeProvider, createTheme, CssBaseline, Snackbar, Alert, CircularProgress } from "@mui/material";
 import { fetchProviderOffers } from "./store/providerOffersSlice";
+import { getEnvVar, getDeploymentEnvironment } from "@utils/envConfig";
 
 /**
  * Theme and WebSocket constants
  */
 const THEME_KEY = "handy_theme_mode";
-const SOCKET_IO_BASE_URL = import.meta.env.VITE_SOCKET_IO_BASE_URL || "http://localhost:5000";
-const SOCKET_IO_PATH = import.meta.env.VITE_SOCKET_IO_PATH || "/socket.io";
+// Debug environment configuration
+const deploymentEnv = getDeploymentEnvironment();
+console.log(`🔧 Environment configuration loaded from: ${deploymentEnv}`);
+
+const SOCKET_IO_BASE_URL = getEnvVar("VITE_SOCKET_IO_BASE_URL");
+const SOCKET_IO_PATH = getEnvVar("VITE_SOCKET_IO_PATH");
+
+console.log(`🌐 Socket.IO URL: ${SOCKET_IO_BASE_URL}`);
+console.log(`📡 Socket.IO Path: ${SOCKET_IO_PATH}`);
 const socket = io(SOCKET_IO_BASE_URL, {
   autoConnect: false,
   path: SOCKET_IO_PATH,

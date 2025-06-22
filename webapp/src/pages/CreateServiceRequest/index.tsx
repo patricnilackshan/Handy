@@ -17,16 +17,11 @@ import {
   Chip,
 } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "@store/hooks";
-import {
-  ArrowBack,
-  PhotoCamera,
-  Delete as DeleteIcon,
-  CloudUpload,
-  Add as AddIcon,
-} from "@mui/icons-material";
+import { ArrowBack, PhotoCamera, Delete as DeleteIcon, CloudUpload, Add as AddIcon } from "@mui/icons-material";
 import apiService from "@utils/apiService";
 import CONSTANTS from "@config/constants";
 import { setUser } from "@store/userSlice";
+import { getEnvVar } from "@utils/envConfig";
 
 const SERVICE_TYPES = [
   { value: "electricity", label: "Electricity", id: 1 },
@@ -127,14 +122,14 @@ const CreateServiceRequest: React.FC = () => {
     const uploadPromises = files.map(async (file, index) => {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+      formData.append("upload_preset", getEnvVar("VITE_CLOUDINARY_UPLOAD_PRESET"));
       formData.append("folder", "handy-requests");
 
       try {
         console.log(`Uploading file ${index + 1}/${files.length}: ${file.name}`);
 
         const response = await fetch(
-          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          `https://api.cloudinary.com/v1_1/${getEnvVar("VITE_CLOUDINARY_CLOUD_NAME")}/image/upload`,
           {
             method: "POST",
             body: formData,
@@ -414,40 +409,33 @@ const CreateServiceRequest: React.FC = () => {
             {imagePreviews.length > 0 && (
               <Box>
                 <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-                  <Typography variant="subtitle2">
-                    Selected Images:
-                  </Typography>
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={handleClearAllImages}
-                    startIcon={<DeleteIcon />}
-                  >
+                  <Typography variant="subtitle2">Selected Images:</Typography>
+                  <Button size="small" color="error" onClick={handleClearAllImages} startIcon={<DeleteIcon />}>
                     Clear All
                   </Button>
                 </Box>
                 <Grid container spacing={2}>
                   {imagePreviews.map((preview, index) => (
                     <Grid key={index} size={{ xs: 6, sm: 4, md: 3 }}>
-                      <Card sx={{ position: 'relative', borderRadius: 1 }}>
+                      <Card sx={{ position: "relative", borderRadius: 1 }}>
                         <CardMedia
                           component="img"
                           height="120"
                           image={preview}
                           alt={`Preview ${index + 1}`}
-                          sx={{ objectFit: 'cover' }}
+                          sx={{ objectFit: "cover" }}
                         />
                         <IconButton
                           onClick={() => handleRemoveImage(index)}
                           sx={{
-                            position: 'absolute',
+                            position: "absolute",
                             top: 4,
                             right: 4,
                             backgroundColor: alpha(theme.palette.error.main, 0.8),
-                            color: 'white',
+                            color: "white",
                             width: 24,
                             height: 24,
-                            '&:hover': {
+                            "&:hover": {
                               backgroundColor: theme.palette.error.main,
                             },
                           }}
@@ -457,12 +445,12 @@ const CreateServiceRequest: React.FC = () => {
                         </IconButton>
                         <Box
                           sx={{
-                            position: 'absolute',
+                            position: "absolute",
                             bottom: 0,
                             left: 0,
                             right: 0,
                             backgroundColor: alpha(theme.palette.common.black, 0.7),
-                            color: 'white',
+                            color: "white",
                             p: 0.5,
                           }}
                         >
@@ -475,7 +463,8 @@ const CreateServiceRequest: React.FC = () => {
                   ))}
                 </Grid>
                 <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-                  Total size: {(selectedImages.reduce((total, file) => total + file.size, 0) / (1024 * 1024)).toFixed(2)} MB
+                  Total size:{" "}
+                  {(selectedImages.reduce((total, file) => total + file.size, 0) / (1024 * 1024)).toFixed(2)} MB
                 </Typography>
               </Box>
             )}
@@ -566,8 +555,7 @@ const CreateServiceRequest: React.FC = () => {
             • Set a realistic budget and timeframe
             <br />
             • Provide clear location details
-            <br />
-            • You can chat with providers after they submit offers
+            <br />• You can chat with providers after they submit offers
           </Typography>
         </Box>
       </Paper>
