@@ -74,40 +74,40 @@ const createPairedJob = async (req, res) => {
       [request_id, provider_id]
     );
 
-    // Get all the providers related to the offers and refund platform_tokens
-    const providerIds = offers.map(offer => offer.provider_id);
-    if (providerIds.length > 0) {
-      const refundPromises = providerIds.map(async (id) => {
-        const provider = await db.getOne(
-          constant.DB_TABLES.USERS,
-          "WHERE user_id = $1",
-          [id]
-        );
-        console.log("Refunding tokens to provider:", provider);
-        if (provider) {
-          const updatedTokens = provider.platform_tokens + 1;
-          await db.update(
-            constant.DB_TABLES.USERS,
-            { platform_tokens: updatedTokens },
-            "WHERE user_id = $1",
-            [id]
-          );
-          // Emit WebSocket notification to each provider
-          const io = req.app.get("io");
-          if (io) {
-            const notificationData = {
-              job_id: job.job_id,
-              consumer_id,
-              request_title: request.title,
-              message: `Your offer for "${request.title}" has been declined. Platform tokens refunded.`
-            };
-            console.log(`Emitting offer decline notification to provider: offer_declined_${id}`, notificationData);
-            io.emit(`offer_declined_${id}`, notificationData);
-          }
-        }
-      });
-      await Promise.all(refundPromises);
-    }
+    // // Get all the providers related to the offers and refund platform_tokens
+    // const providerIds = offers.map(offer => offer.provider_id);
+    // if (providerIds.length > 0) {
+    //   const refundPromises = providerIds.map(async (id) => {
+    //     const provider = await db.getOne(
+    //       constant.DB_TABLES.USERS,
+    //       "WHERE user_id = $1",
+    //       [id]
+    //     );
+    //     console.log("Refunding tokens to provider:", provider);
+    //     if (provider) {
+    //       const updatedTokens = provider.platform_tokens + 1;
+    //       await db.update(
+    //         constant.DB_TABLES.USERS,
+    //         { platform_tokens: updatedTokens },
+    //         "WHERE user_id = $1",
+    //         [id]
+    //       );
+    //       // Emit WebSocket notification to each provider
+    //       const io = req.app.get("io");
+    //       if (io) {
+    //         const notificationData = {
+    //           job_id: job.job_id,
+    //           consumer_id,
+    //           request_title: request.title,
+    //           message: `Your offer for "${request.title}" has been declined. Platform tokens refunded.`
+    //         };
+    //         console.log(`Emitting offer decline notification to provider: offer_declined_${id}`, notificationData);
+    //         io.emit(`offer_declined_${id}`, notificationData);
+    //       }
+    //     }
+    //   });
+    //   await Promise.all(refundPromises);
+    // }
 
     // Emit WebSocket notification to provider
     const io = req.app.get("io");

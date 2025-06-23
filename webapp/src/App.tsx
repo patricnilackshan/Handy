@@ -253,6 +253,7 @@ const App = () => {
           showToast(jobData.message, "success");
           if (user?.uid) {
             dispatch(fetchServiceRequestsBasedOnService(user.uid));
+            dispatch(fetchProviderOffers(user.uid));
           }
         });
         return () => {
