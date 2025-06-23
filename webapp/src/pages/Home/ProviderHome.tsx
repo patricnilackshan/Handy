@@ -59,17 +59,17 @@ const ProviderHome: React.FC = () => {
   const { items: requests = [], status: requestsStatus = "" } = serviceRequests;
   const { items: myOffers = [] } = providerOffers;
 
-  const getInitialTab = (): 'requests' | 'jobs' => {
-    const savedTab = localStorage.getItem('providerActiveTab');
-    return (savedTab === 'requests' || savedTab === 'jobs') ? savedTab : 'requests';
+  const getInitialTab = (): "requests" | "jobs" => {
+    const savedTab = localStorage.getItem("providerActiveTab");
+    return savedTab === "requests" || savedTab === "jobs" ? savedTab : "requests";
   };
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<'requests' | 'jobs'>(getInitialTab());
+  const [activeTab, setActiveTab] = useState<"requests" | "jobs">(getInitialTab());
 
   // Persist activeTab to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('providerActiveTab', activeTab);
+    localStorage.setItem("providerActiveTab", activeTab);
   }, [activeTab]);
 
   // State for editing offers
@@ -362,12 +362,35 @@ const ProviderHome: React.FC = () => {
 
             <Button
               variant="outlined"
-              size="small"
+              size="medium"
               startIcon={<ChatIcon />}
               onClick={() => navigate("/dashboard/chats")}
-              sx={{ ml: "auto" }}
+              sx={{
+                ml: "auto",
+                minWidth: 120,
+                borderRadius: 2,
+                borderWidth: 2,
+                fontWeight: 600,
+                px: 2.5,
+                py: 1,
+                backgroundColor: alpha(theme.palette.primary.main, 0.03),
+                borderColor: alpha(theme.palette.primary.main, 0.3),
+                "&:hover": {
+                  borderWidth: 2,
+                  borderColor: theme.palette.primary.main,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                  transform: "translateY(-1px)",
+                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.2)}`,
+                },
+                "&:active": {
+                  transform: "translateY(0px)",
+                },
+                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
             >
-              Messages
+              <Typography variant="button" sx={{ fontWeight: 600 }}>
+                Messages
+              </Typography>
             </Button>
           </div>
 
@@ -773,12 +796,35 @@ const ProviderHome: React.FC = () => {
 
           <Button
             variant="outlined"
-            size="small"
+            size="medium"
             startIcon={<ChatIcon />}
             onClick={() => navigate("/dashboard/chats")}
-            sx={{ ml: "auto" }}
+            sx={{
+              ml: "auto",
+              minWidth: 120,
+              borderRadius: 2,
+              borderWidth: 2,
+              fontWeight: 600,
+              px: 2.5,
+              py: 1,
+              backgroundColor: alpha(theme.palette.primary.main, 0.03),
+              borderColor: alpha(theme.palette.primary.main, 0.3),
+              "&:hover": {
+                borderWidth: 2,
+                borderColor: theme.palette.primary.main,
+                backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                transform: "translateY(-1px)",
+                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.2)}`,
+              },
+              "&:active": {
+                transform: "translateY(0px)",
+              },
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
           >
-            Messages
+            <Typography variant="button" sx={{ fontWeight: 600 }}>
+              Messages
+            </Typography>
           </Button>
         </div>
 
@@ -907,6 +953,24 @@ const ProviderHome: React.FC = () => {
                       startIcon={<ChatIcon />}
                       onClick={() => {
                         handleStartChat(job.consumer_id, job.consumer_name || "Consumer");
+                      }}
+                      sx={{
+                        borderRadius: 1.5,
+                        fontWeight: 500,
+                        textTransform: "none",
+                        borderColor: alpha(theme.palette.primary.main, 0.5),
+                        color: theme.palette.primary.main,
+                        backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                        "&:hover": {
+                          borderColor: theme.palette.primary.main,
+                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                          transform: "translateY(-1px)",
+                          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        },
+                        "&:active": {
+                          transform: "translateY(0px)",
+                        },
+                        transition: "all 0.15s ease-in-out",
                       }}
                     >
                       Message Consumer
@@ -1174,77 +1238,79 @@ const ProviderHome: React.FC = () => {
               </Box>
 
               {/* Request Images */}
-              {selectedRequest.image_urls && Array.isArray(selectedRequest.image_urls) && selectedRequest.image_urls.length > 0 && (
-                <Box mt={2} mb={2}>
-                  <Typography variant="h6" gutterBottom>
-                    Request Images ({selectedRequest.image_urls.length})
-                  </Typography>
-                  {selectedRequest.image_urls.length === 1 ? (
-                    // Single image - display larger
-                    <Card sx={{ maxWidth: 400, borderRadius: 2 }}>
-                      <CardMedia
-                        component="img"
-                        height="250"
-                        image={selectedRequest.image_urls[0]}
-                        alt="Service request image"
-                        sx={{
-                          objectFit: "cover",
-                          cursor: "pointer",
-                          transition: "transform 0.2s",
-                          "&:hover": {
-                            transform: "scale(1.02)",
-                          },
-                        }}
-                        onClick={() => window.open(selectedRequest.image_urls[0], "_blank")}
-                      />
-                    </Card>
-                  ) : (
-                    // Multiple images - display in grid
-                    <Grid container spacing={2}>
-                      {selectedRequest.image_urls.map((imageUrl: string, index: number) => (
-                        <Grid key={index} size={{ xs: 6, sm: 4 }}>
-                          <Card sx={{ position: 'relative', borderRadius: 1 }}>
-                            <CardMedia
-                              component="img"
-                              height="150"
-                              image={imageUrl}
-                              alt={`Request image ${index + 1}`}
-                              sx={{
-                                objectFit: "cover",
-                                cursor: "pointer",
-                                transition: "transform 0.2s",
-                                "&:hover": {
-                                  transform: "scale(1.05)",
-                                },
-                              }}
-                              onClick={() => window.open(imageUrl, "_blank")}
-                            />
-                            <Box
-                              sx={{
-                                position: 'absolute',
-                                bottom: 4,
-                                right: 4,
-                                backgroundColor: alpha(theme.palette.common.black, 0.7),
-                                color: 'white',
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 1,
-                              }}
-                            >
-                              <Typography variant="caption">
-                                {index + 1}/{selectedRequest.image_urls.length}
-                              </Typography>
-                            </Box>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  )}
-                  <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-                    Click images to view full size
-                  </Typography>
-                </Box>
-              )}
+              {selectedRequest.image_urls &&
+                Array.isArray(selectedRequest.image_urls) &&
+                selectedRequest.image_urls.length > 0 && (
+                  <Box mt={2} mb={2}>
+                    <Typography variant="h6" gutterBottom>
+                      Request Images ({selectedRequest.image_urls.length})
+                    </Typography>
+                    {selectedRequest.image_urls.length === 1 ? (
+                      // Single image - display larger
+                      <Card sx={{ maxWidth: 400, borderRadius: 2 }}>
+                        <CardMedia
+                          component="img"
+                          height="250"
+                          image={selectedRequest.image_urls[0]}
+                          alt="Service request image"
+                          sx={{
+                            objectFit: "cover",
+                            cursor: "pointer",
+                            transition: "transform 0.2s",
+                            "&:hover": {
+                              transform: "scale(1.02)",
+                            },
+                          }}
+                          onClick={() => window.open(selectedRequest.image_urls[0], "_blank")}
+                        />
+                      </Card>
+                    ) : (
+                      // Multiple images - display in grid
+                      <Grid container spacing={2}>
+                        {selectedRequest.image_urls.map((imageUrl: string, index: number) => (
+                          <Grid key={index} size={{ xs: 6, sm: 4 }}>
+                            <Card sx={{ position: "relative", borderRadius: 1 }}>
+                              <CardMedia
+                                component="img"
+                                height="150"
+                                image={imageUrl}
+                                alt={`Request image ${index + 1}`}
+                                sx={{
+                                  objectFit: "cover",
+                                  cursor: "pointer",
+                                  transition: "transform 0.2s",
+                                  "&:hover": {
+                                    transform: "scale(1.05)",
+                                  },
+                                }}
+                                onClick={() => window.open(imageUrl, "_blank")}
+                              />
+                              <Box
+                                sx={{
+                                  position: "absolute",
+                                  bottom: 4,
+                                  right: 4,
+                                  backgroundColor: alpha(theme.palette.common.black, 0.7),
+                                  color: "white",
+                                  px: 1,
+                                  py: 0.5,
+                                  borderRadius: 1,
+                                }}
+                              >
+                                <Typography variant="caption">
+                                  {index + 1}/{selectedRequest.image_urls.length}
+                                </Typography>
+                              </Box>
+                            </Card>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    )}
+                    <Typography variant="caption" color="text.secondary" display="block" mt={1}>
+                      Click images to view full size
+                    </Typography>
+                  </Box>
+                )}
 
               {/* Fallback for single image (backward compatibility) */}
               {!selectedRequest.image_urls && selectedRequest.image_url && (

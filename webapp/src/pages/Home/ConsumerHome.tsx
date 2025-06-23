@@ -53,16 +53,16 @@ const ConsumerHome: React.FC = () => {
   const { items: requests = [], status: requestsStatus = "", selectedRequestId = null } = serviceRequests;
   const { items: offers = [], status: offersStatus = "" } = offersState;
 
-  const getInitialTab = (): 'requests' | 'jobs' => {
-    const savedTab = localStorage.getItem('consumerActiveTab');
-    return (savedTab === 'requests' || savedTab === 'jobs') ? savedTab : 'requests';
+  const getInitialTab = (): "requests" | "jobs" => {
+    const savedTab = localStorage.getItem("consumerActiveTab");
+    return savedTab === "requests" || savedTab === "jobs" ? savedTab : "requests";
   };
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<'requests' | 'jobs'>(getInitialTab());
+  const [activeTab, setActiveTab] = useState<"requests" | "jobs">(getInitialTab());
 
   useEffect(() => {
-    localStorage.setItem('consumerActiveTab', activeTab);
+    localStorage.setItem("consumerActiveTab", activeTab);
   }, [activeTab]);
 
   // State for offer confirmation
@@ -421,15 +421,41 @@ const ConsumerHome: React.FC = () => {
               My Service Requests ({safeRequests.length})
             </Typography>
 
-            {/* Chat Button */}
+            {/* Enhanced Messages Button */}
             <Button
               variant="outlined"
-              size="small"
+              size="medium"
               startIcon={<Chat />}
               onClick={() => navigate("/dashboard/chats")}
-              sx={{ ml: "auto" }}
+              sx={{
+                ml: "auto",
+                minWidth: 120,
+                borderRadius: 2,
+                borderWidth: 2,
+                fontWeight: 600,
+                px: 2.5,
+                py: 1,
+                position: "relative",
+                backgroundColor: alpha(theme.palette.primary.main, 0.03),
+                borderColor: alpha(theme.palette.primary.main, 0.3),
+                "&:hover": {
+                  borderWidth: 2,
+                  borderColor: theme.palette.primary.main,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                  transform: "translateY(-1px)",
+                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.2)}`,
+                },
+                "&:active": {
+                  transform: "translateY(0px)",
+                },
+                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
             >
-              Messages
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                <Typography variant="button" sx={{ fontWeight: 600 }}>
+                  Messages
+                </Typography>
+              </Box>
             </Button>
           </div>
 
@@ -756,6 +782,25 @@ const ConsumerHome: React.FC = () => {
                             e.stopPropagation();
                             handleStartChat(offer.provider_id, offer.provider_name || "Provider");
                           }}
+                          sx={{
+                            borderRadius: 1.5,
+                            fontWeight: 500,
+                            textTransform: "none",
+                            minWidth: 80,
+                            borderColor: alpha(theme.palette.info.main, 0.5),
+                            color: theme.palette.info.main,
+                            backgroundColor: alpha(theme.palette.info.main, 0.05),
+                            "&:hover": {
+                              borderColor: theme.palette.info.main,
+                              backgroundColor: alpha(theme.palette.info.main, 0.1),
+                              transform: "translateY(-1px)",
+                              boxShadow: `0 2px 8px ${alpha(theme.palette.info.main, 0.2)}`,
+                            },
+                            "&:active": {
+                              transform: "translateY(0px)",
+                            },
+                            transition: "all 0.15s ease-in-out",
+                          }}
                         >
                           Message
                         </Button>
@@ -838,12 +883,35 @@ const ConsumerHome: React.FC = () => {
 
           <Button
             variant="outlined"
-            size="small"
+            size="medium"
             startIcon={<Chat />}
             onClick={() => navigate("/dashboard/chats")}
-            sx={{ ml: "auto" }}
+            sx={{
+              ml: "auto",
+              minWidth: 120,
+              borderRadius: 2,
+              borderWidth: 2,
+              fontWeight: 600,
+              px: 2.5,
+              py: 1,
+              backgroundColor: alpha(theme.palette.primary.main, 0.03),
+              borderColor: alpha(theme.palette.primary.main, 0.3),
+              "&:hover": {
+                borderWidth: 2,
+                borderColor: theme.palette.primary.main,
+                backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                transform: "translateY(-1px)",
+                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.2)}`,
+              },
+              "&:active": {
+                transform: "translateY(0px)",
+              },
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
           >
-            Messages
+            <Typography variant="button" sx={{ fontWeight: 600 }}>
+              Messages
+            </Typography>
           </Button>
         </div>
 
@@ -955,6 +1023,24 @@ const ConsumerHome: React.FC = () => {
                       onClick={() => {
                         // Navigate to chat with provider
                         handleStartChat(job.provider_id, job.provider_name || "Provider");
+                      }}
+                      sx={{
+                        borderRadius: 1.5,
+                        fontWeight: 500,
+                        textTransform: "none",
+                        borderColor: alpha(theme.palette.primary.main, 0.5),
+                        color: theme.palette.primary.main,
+                        backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                        "&:hover": {
+                          borderColor: theme.palette.primary.main,
+                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                          transform: "translateY(-1px)",
+                          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.2)}`,
+                        },
+                        "&:active": {
+                          transform: "translateY(0px)",
+                        },
+                        transition: "all 0.15s ease-in-out",
                       }}
                     >
                       Message Provider
